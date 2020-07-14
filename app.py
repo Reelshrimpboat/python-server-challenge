@@ -50,7 +50,7 @@ def specific_book_route(index):
         books.pop(index) # removes book at index from list
         return "Aaannnnnnnd it's gone", 200 # sends back south park joke to show book has been removed
 
-# # GET that calls for a single book
+# # alternate GET that calls for a single book, saving for reference
 # @app.route('/books', methods=['GET'])
 # def api_id():
 #     # Check if an ID was provided as part of the URL.
