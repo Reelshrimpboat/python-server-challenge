@@ -107,11 +107,12 @@ def garden_post():
                                             database="garden"
                                             )
         cursor = connection.cursor()
-        print('plant: ', plant)
         post_query = '''INSERT INTO "plant" ("name", "kingdom", "clade", "order", "family", "subfamily", "genus")
-            VALUES('Rose', 'Plantae', 'Angiosperms', 'Rosales', 'Rosaceae', 'Rosoideae', 'Rosa');'''
-        print('post query:', post_query)
-        cursor.execute(post_query)
+            VALUES(%s, %s, %s, %s, %s, %s, %s);'''
+        post_values = (plant["name"], plant["kingdom"], plant["clade"], plant["order"], plant["family"], plant["subfamily"], plant["genus"])
+
+        print('post query:', post_query , " : post_values:" , post_values)
+        cursor.execute(post_query, post_values)
         
         connection.commit()
         return ("Record inserted successfully into garden table", 200)
