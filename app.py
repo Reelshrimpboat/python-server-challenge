@@ -50,18 +50,26 @@ def specific_book_route(index):
         books.pop(index) # removes book at index from list
         return "Aaannnnnnnd it's gone", 200 # sends back south park joke to show book has been removed
 
+# Test object for POSTMAN books requests, use in Body tab, raw format, as JSON object
+# {
+#     "id": 3,
+#     "title": "A Book With Me In It",
+#     "author": "Me",
+#     "published": "2008"
+# }
 
 @app.route("/garden", methods=['GET'])
-def garden():
+def garden_get():
     try:
         connection = psycopg2.connect(
                                         host="localhost",
                                         port="5432",
-                                        database="garden")
+                                        database="garden"
+                                        )
         cursor = connection.cursor()
-        postgreSQL_select_Query = "select * from plant"
+        get_query = "select * from plant"
 
-        cursor.execute(postgreSQL_select_Query)
+        cursor.execute(get_query)
         print("Selecting rows from plants")
         plants = cursor.fetchall()
         print("plants: " , plants)
@@ -76,3 +84,45 @@ def garden():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
+
+
+# Test object for POSTMAN garden requests, use in Body tab, raw format, as JSON object
+# {
+#     "name": "Rose",
+#     "kingdom": "Plantae",
+#     "clade": "Angiosperms",
+#     "order": "Rosales",
+#     "family": "Rosaceae",
+#     "subfamily": "Rosoideae",
+#     "genus": "Rosa"
+# }
+
+@app.route("/garden", methods=['POST'])
+def garden_post():
+    try:
+        plant = request.get_json()  # sets plant as incoming JSON object
+        connection = psycopg2.connect(
+                                            host="localhost",
+                                            port="5432",
+                                            database="garden"
+                                            )
+        cursor = connection.cursor()
+        print('plant: ', plant)
+        post_query = '''INSERT INTO "plant" ("name", "kingdom", "clade", "order", "family", "subfamily", "genus")
+            VALUES('Rose', 'Plantae', 'Angiosperms', 'Rosales', 'Rosaceae', 'Rosoideae', 'Rosa');'''
+        print('post query:', post_query)
+        cursor.execute(post_query)
+        
+        connection.commit()
+        return ("Record inserted successfully into garden table", 200)
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error while fetching data from PostgreSQL", error)
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+            # garden_get()
