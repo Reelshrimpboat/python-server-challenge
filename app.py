@@ -9,23 +9,21 @@ def home():
 
 
 try:
-   connection = psycopg2.connect(user="sysadmin",
-                                 password="pynative@#29",
-                                 host="127.0.0.1",
+   connection = psycopg2.connect(
+                                 host="localhost",
                                  port="5432",
-                                 database="weekend_to_do_app")
+                                 database="garden")
    cursor = connection.cursor()
-   postgreSQL_select_Query = "select * from task"
+   postgreSQL_select_Query = "select * from plant"
 
    cursor.execute(postgreSQL_select_Query)
-   print("Selecting rows from mobile table using cursor.fetchall")
-   mobile_records = cursor.fetchall()
+   print("Selecting rows from plants")
+   plants = cursor.fetchall()
 
    print("Print each row and it's columns values")
-   for row in mobile_records:
-       print("Id = ", row[0], )
-       print("Model = ", row[1])
-       print("Price  = ", row[2], "\n")
+   for row in plants:
+       print("id = ", row[0], )
+       print("plant = ", row[1])
 
 except (Exception, psycopg2.Error) as error:
     print("Error while fetching data from PostgreSQL", error)
@@ -36,19 +34,3 @@ finally:
         cursor.close()
         connection.close()
         print("PostgreSQL connection is closed")
-
-
-# @app.route('/tasks', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         return do_the_login()
-#     elif request.method == 'GET':
-#         return do_the_login()
-#     else:
-#         return show_the_login_form()
-
-# conn = psycopg2.connect("dbname=weekend-to-do-app")
-# cur = conn.cursor()
-
-# cur.execute("SELECT * FROM tasks;")
-# cur.fetchone()
