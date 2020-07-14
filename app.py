@@ -22,7 +22,7 @@ books = [
 # A route for homepage
 @app.route('/')
 def home():
-    return '''<h1>Welcome Home</h1>
+    return '''<h1>Welcome to the Outdoor Library</h1>
 <p>Check out our books or take a stroll through our garden</p>'''
 
 
@@ -50,31 +50,6 @@ def specific_book_route(index):
         books.pop(index) # removes book at index from list
         return "Aaannnnnnnd it's gone", 200 # sends back south park joke to show book has been removed
 
-# # alternate GET that calls for a single book, saving for reference
-# @app.route('/books', methods=['GET'])
-# def api_id():
-#     # Check if an ID was provided as part of the URL.
-#     # If ID is provided, assign it to a variable.
-#     # If no ID is provided, display an error in the browser.
-#     if 'id' in request.args:
-#         id = int(request.args['id'])
-#     else:
-#         return "Error: No id field provided. Please specify an id."
-
-#     # Create an empty list for our results
-#     results = []
-
-#     # Loop through the data and match results that fit the requested ID.
-#     # IDs are unique, but other fields might return many results
-#     for book in books:
-#         if book['id'] == id:
-#             results.append(book)
-
-#     # Use the jsonify function from Flask to convert our list of
-#     # Python dictionaries to the JSON format.
-#     return jsonify(results)
-
-
 
 @app.route("/garden", methods=['GET'])
 def garden():
@@ -89,15 +64,8 @@ def garden():
         cursor.execute(postgreSQL_select_Query)
         print("Selecting rows from plants")
         plants = cursor.fetchall()
-
-        print("Print each row and it's columns values")
-        list = []
-        for row in plants:
-            list.append(row[1])
-            # print("id = ", row[0], )
-            # print("plant = ", row[1])
-        print("list = ", list)
-        return jsonify(list)
+        print("plants: " , plants)
+        return jsonify(plants)
 
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
