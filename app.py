@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify
-app = Flask(__name__)
-import psycopg2
+from flask import Flask, request, jsonify # imports items from Flask for CRUD functions
+app = Flask(__name__) # defines app as flask object
+import psycopg2 # imports psycopg2 for database queries
 
 
 # Create some test data for our catalog in the form of a list of dictionaries.
@@ -8,37 +8,47 @@ books = [
     {'id': 0,
      'title': 'A Fire Upon the Deep',
      'author': 'Vernor Vinge',
-     'first_sentence': 'The coldsleep itself was dreamless.',
      'year_published': '1992'},
     {'id': 1,
      'title': 'The Ones Who Walk Away From Omelas',
      'author': 'Ursula K. Le Guin',
-     'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
      'published': '1973'},
     {'id': 2,
      'title': 'Dhalgren',
      'author': 'Samuel R. Delany',
-     'first_sentence': 'to wound the autumnal city.',
      'published': '1975'}
 ]
 
-
-@app.route('/', methods=['GET'])
+# A route for homepage
+@app.route('/')
 def home():
     return '''<h1>Welcome Home</h1>
 <p>Check out our books or take a stroll through our garden</p>'''
 
 
-# A route to return all of the available entries in our catalog.
+# A route to return all of the available entries in our catalog or to POST a new entry
 @app.route('/books', methods=['GET', 'POST'])
 def book_route():
-    if request.method == 'GET':
-        return jsonify(books)
-    elif request.method == 'POST':
-        book = request.get_json()
-        print("book: ", book)
-        books.append(book)
-        return {'id': len(books)}, 200
+    if request.method == 'GET':  # checks method to see if GET
+        return jsonify(books) # returns all books once gotten
+    elif request.method == 'POST': # checks method to see if POST
+        book = request.get_json() # sets book as incoming JSON object
+        print("book: ", book) # prints book to console
+        books.append(book) # appends book to book list
+        return {'id': len(books)}, 200 #returns current number of books in list to show update
+
+# A route ot return specific book, update specific book or specific delete
+@app.route('/books/<int:index>', methods=['GET', 'PUT', 'DELETE'])
+def specific_book_route(index):
+    if request.method == 'GET':  # checks method to see if GET
+        return jsonify(books[index]), 200 #returns specified book
+    elif request.method == 'PUT': # checks method to see if PUT
+        book = request.get_json() # sets book as incoming JSON object
+        books[index] = book # changes data in index position of books list
+        return jsonify(books[index]), 200 #returns data of updated book
+    elif request.method == 'DELETE': # checks method to see if DELETE
+        books.pop(index) # removes book at index from list
+        return "Aaannnnnnnd it's gone", 200 # sends back south park joke to show book has been removed
 
 # # GET that calls for a single book
 # @app.route('/books', methods=['GET'])
