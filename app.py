@@ -27,6 +27,7 @@ books = [
 ]
 
 
+
 # ROUTES for BOOKS
 # A route to return all of the available entries in our catalog or to POST a new entry
 @app.route('/books', methods=['GET', 'POST'])
@@ -62,7 +63,10 @@ def specific_book_route(index):
 #     "published": "2008"
 # }
 
-# END ROUTES Ffor BOOKS
+# END ROUTES for BOOKS
+
+
+
 
 # ROUTES for GARDEN DATABASE - PLANT TABLE
 # GET ROUTE for PLANT TABLE
